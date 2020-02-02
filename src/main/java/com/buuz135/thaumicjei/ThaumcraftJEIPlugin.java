@@ -157,14 +157,16 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
                                 if (trueCount <= 0) return ItemStack.EMPTY;
                                 if (trueCount > Byte.MAX_VALUE)
                                     compound.setByte("Count", Byte.MAX_VALUE);
+                                int total = compound.getInteger("TCJeiTotalCount");
                                 ItemStack itemStack = new ItemStack(compound);
+                                itemStack.setAnimationsToGo(total);
                                 itemStack.setCount(trueCount);
                                 return itemStack;
                             } catch (ClassCastException e) {
 
                             }
                             return ItemStack.EMPTY;
-                        }).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed()).collect(Collectors.toList());
+                        }).filter(stack -> !stack.isEmpty()).sorted(Comparator.comparing(ItemStack::getCount).reversed().thenComparing(Comparator.comparing(ItemStack::getAnimationsToGo))).collect(Collectors.toList());
                         int start = 0;
                         while (start < items.size()) {
                             wrappers.add(new AspectFromItemStackCategory.AspectFromItemStackWrapper(new AspectList().add(aspect, 1), items.subList(start, Math.min(start + 36, items.size()))));
@@ -223,12 +225,15 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
         for (ItemStack stack : items) {
             AspectList list = new AspectList(stack);
             if (list.size() > 0) {
+                int total = list.visSize();
                 for (Aspect aspect : list.getAspects()) {
                     ItemStack clone = stack.copy();
                     clone.setCount(Math.max(list.getAmount(aspect), 1));
                     AspectCache cache = aspectCacheHashMap.getOrDefault(aspect, new AspectCache(aspect.getTag()));
                     NBTTagCompound nbtTagCompound = clone.serializeNBT();
                     nbtTagCompound.setShort("Count", (short) clone.getCount());
+                    nbtTagCompound.setInteger("TCJeiTotalCount", (short) total);
+                    
                     cache.items.add(nbtTagCompound.toString());
                     aspectCacheHashMap.put(aspect, cache);
                 }
