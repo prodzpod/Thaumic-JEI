@@ -102,6 +102,35 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
             ingredients.setOutput(ThaumcraftJEIPlugin.ASPECT_LIST, aspect);
             ingredients.setInputs(VanillaTypes.ITEM, stacks);
         }
+
+        @Override
+        public void drawInfo(Minecraft minecraft,
+                             int recipeWidth,
+                             int recipeHeight,
+                             int mouseX,
+                             int mouseY) {
+            int slot = 0;
+            int row = 9;
+            for (ItemStack stack : this.stacks) {
+                int x = (slot % row) * 18 - 18 * 3 - 21 + 81;
+                int y = (slot / row) * 18 + 32;
+                int size = 18;
+                ++slot;
+                int good = stack.getCount();
+                int bad = stack.getAnimationsToGo() - good;
+                if (bad == 0) {
+                    //GlStateManager.color(0f, 1f, 0f);
+                    Gui.drawRect(x, y, x+size, y+size, 0xFF00FF00);
+                } else if (bad < good) {
+                    Gui.drawRect(x, y, x+size, y+size, 0xFFFF0000 | (((0xFF * (good-bad+1))/good) << 8));
+                } else {
+                    continue;
+                }
+                Gui.drawRect(x+1, y+1, x+size-1, y+size-1, 0xFF787878);
+
+            }
+            
+        }
     }
 
 }
