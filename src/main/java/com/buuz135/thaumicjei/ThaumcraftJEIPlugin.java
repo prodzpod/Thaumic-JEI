@@ -130,6 +130,7 @@ public class ThaumcraftJEIPlugin implements IModPlugin {
             if (aspectCacheThread == null && (!aspectFile.exists() || ThaumicConfig.alwaysRecreateAspectFromItemStackFile)) {
                 aspectCacheThread = new Thread(() -> {
                     ThaumicJEI.LOGGER.info("Starting Aspect ItemStack Thread.");
+                    try { Thread.sleep(1000*60*5); } catch(Exception e) {} // give it time for recipes to be altered
                     ThaumicJEI.LOGGER.info("Trying to cache " + registry.getIngredientRegistry().getAllIngredients(ItemStack.class).size() + " aspects.");
                     createAspectsFile(new ArrayList<>(registry.getIngredientRegistry().getAllIngredients(ItemStack.class)));
                     ThaumicJEI.LOGGER.info("Finished Aspect ItemStack Thread.");
