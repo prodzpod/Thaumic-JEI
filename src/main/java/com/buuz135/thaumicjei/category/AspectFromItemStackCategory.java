@@ -121,8 +121,11 @@ public class AspectFromItemStackCategory implements IRecipeCategory<AspectFromIt
                 if (bad == 0) {
                     //GlStateManager.color(0f, 1f, 0f);
                     Gui.drawRect(x, y, x+size, y+size, 0xFF00FF00);
-                } else if (bad < good) {
-                    Gui.drawRect(x, y, x+size, y+size, 0xFFFF0000 | (((0xFF * (good-bad+1))/good) << 8));
+                } else if (bad <= good) {
+                    if (good == 1)
+                        Gui.drawRect(x, y, x+size, y+size, 0xFFFFFF00);
+                    else
+                        Gui.drawRect(x, y, x+size, y+size, 0xFFFF0000 | (((0xFF * (good-bad))/(good-1)) << 8));
                 } else {
                     continue;
                 }
