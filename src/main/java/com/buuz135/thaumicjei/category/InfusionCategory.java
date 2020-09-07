@@ -157,7 +157,7 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             int instability = Math.min(5, recipe.instability / 2);
-            String inst = TextFormatting.DARK_GRAY + new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText() + (recipe.instability >= 10 ? "!" : "") + (recipe.instability >= 15 ? "!" : "") + (recipe.instability >= 25 ? "!" : "");
+            String inst = TextFormatting.DARK_GRAY + new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText() + (recipe.instability >= 15 ? "\u00A74!" : "") + (recipe.instability >= 25 ? "\u00A74!" : "") + (recipe.instability >= 50 ? "\u00A74!" : "");
             minecraft.fontRenderer.drawString(inst, (recipeWidth / 2) - (minecraft.fontRenderer.getStringWidth(inst) / 2), 158, 0);
             if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()))
                 minecraft.getRenderItem().renderItemIntoGUI(new ItemStack(Blocks.BARRIER), 92, 9);
