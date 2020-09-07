@@ -48,6 +48,9 @@ public class ThaumicConfig {
     @Config.Comment("Hide recipes from JEI if you don't have the research for it")
     public static boolean hideRecipesIfMissingResearch = false;
 
+    @Config.Comment("Shows the exact loss per cycle on Infusion Recipes")
+    public static boolean showLossPerCycle = true;
+
     @Mod.EventBusSubscriber(modid = ThaumicJEI.MOD_ID)
     private static class EventHandler {
         @SubscribeEvent
