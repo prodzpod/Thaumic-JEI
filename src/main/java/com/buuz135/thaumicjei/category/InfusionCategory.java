@@ -56,6 +56,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.buuz135.thaumicjei.config.ThaumicConfig.showLossPerCycle;
+
 public class InfusionCategory implements IRecipeCategory<InfusionCategory.InfusionWrapper> {
 
     public static final String UUID = "THAUMCRAFT_INFUSION";
@@ -155,7 +157,7 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             int instability = Math.min(5, recipe.instability / 2);
-            String inst = TextFormatting.DARK_GRAY + new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText();
+            String inst = TextFormatting.DARK_GRAY + new TextComponentTranslation("tc.inst").getFormattedText() + new TextComponentTranslation("tc.inst." + instability).getUnformattedText() + (recipe.instability >= 10 ? "!" : "") + (recipe.instability >= 15 ? "!" : "") + (recipe.instability >= 25 ? "!" : "");
             minecraft.fontRenderer.drawString(inst, (recipeWidth / 2) - (minecraft.fontRenderer.getStringWidth(inst) / 2), 158, 0);
             if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()))
                 minecraft.getRenderItem().renderItemIntoGUI(new ItemStack(Blocks.BARRIER), 92, 9);
@@ -168,11 +170,36 @@ public class InfusionCategory implements IRecipeCategory<InfusionCategory.Infusi
 
         @Override
         public List<String> getTooltipStrings(int mouseX, int mouseY) {
+            List<String> tooltip = new ArrayList<>();
             if (!ThaumcraftCapabilities.knowsResearch(Minecraft.getMinecraft().player, getResearch()) && mouseX > 92 && mouseX < 108 && mouseY > 9 && mouseY < 25) {
                 return ResearchUtils.generateMissingResearchList(getResearch());
             }
-            return null;
+            if (showLossPerCycle && mouseX >= 18 && mouseX <= 128 && mouseY >= 158 && mouseY <= 174) {
+                TextFormatting color;
+                switch (recipe.instability / 2) {
+                    case 0:
+                        color = TextFormatting.BLUE;
+                        break;
+                    case 1:
+                        color = TextFormatting.AQUA;
+                        break;
+                    case 2:
+                        color = TextFormatting.LIGHT_PURPLE;
+                        break;
+                    case 3:
+                        color = TextFormatting.YELLOW;
+                        break;
+                    case 4:
+                        color = TextFormatting.GOLD;
+                        break;
+                    default:
+                        color = TextFormatting.RED;
+                        break;
+                }
+                if (recipe.instability >= 10) color = TextFormatting.DARK_RED;
+                tooltip.add(color + String.format("%.1f", (double)recipe.instability / 5.0) + " " + TextFormatting.WHITE + new TextComponentTranslation("stability.loss").getFormattedText());
+            }
+            return tooltip;
         }
     }
-
 }
